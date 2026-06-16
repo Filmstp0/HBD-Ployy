@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🐻🧈</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="envelope-wrapper" id="envelopeWrapper">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+                
+                <div class="heart-seal">❤️</div>
+                
+                <div class="letter" id="letterCard">
+                    <div class="letter-page page-1 active">
+                        <img src="ploy.jpg" class="bear-img">
+                        <h2>Happy Birthday 💖</h2>
+                        <p>ขอให้ที่รักมีความสุขมากๆ น้าาา<br>น่ารักสดใสไปตลอดเลยแล้วก็ขอโทษที่บางครั้งทำตัวไม่ดีให้แฟนโกรธด้วย<br>รักที่สุดดดเลยไอตูดด จุ๊ฟฟๆ ✨</p>
+                        <button class="next-page-btn" id="nextPageBtn">กดดูของขวัญสิ 🎁</button>
+                    </div>
+
+                    <div class="letter-page page-2">
+                        <h2>นี่งายย ของขวัญ! 💸</h2>
+                        <img src="เงินน2.jpg" alt="Slip" class="slip-img" id="slipImg" style="cursor: zoom-in;">
+                        <p class="slip-sub">เอาไปเติมหมีเนยนะ ❤️</p>
+                        <button class="next-page-btn" id="prevPageBtn">⬅️ ย้อนกลับ</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="openBtn">ลองเปิดสิ 💌</button>
+            <button class="btn reset-btn" id="resetBtn" style="display: none;">ปิดซอง</button>
+        </div>
+    </div>
+
+    <div class="image-modal" id="imageModal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

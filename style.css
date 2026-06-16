@@ -1,0 +1,472 @@
+:root {
+    --bg-color: #FFFDF7; 
+    --envelope-color: #F8D57E; 
+    --envelope-dark: #E6B953; 
+    --text-color: #5C4322; 
+    --btn-color: #FF9B9B; 
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(rgba(255, 253, 247, 0.3), rgba(255, 253, 247, 0.3)), url('butterbear-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+    font-family: 'Kanit', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+/* --- Envelope Styles --- */
+.envelope-wrapper {
+    position: relative;
+    width: 600px;  
+    height: 360px; 
+    transition: transform 0.4s ease-in-out;
+    animation: float 3s ease-in-out infinite; 
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--envelope-color);
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* ฝาพับซองจดหมาย: ลงเงาเพิ่มมิติ */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 180px solid var(--envelope-dark); 
+    border-left: 300px solid transparent;  
+    border-right: 300px solid transparent;
+    border-bottom: 0 solid transparent;
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 4;
+    filter: drop-shadow(0 4px 5px rgba(0,0,0,0.1));
+}
+
+/* ตัวซองจดหมาย: ใส่ "ลายสก็อตตารางเหลืองพาสเทล" สไตล์ Butterbear Cafe */
+.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 180px solid var(--envelope-color);
+    border-left: 300px solid var(--envelope-dark);
+    border-right: 300px solid var(--envelope-dark);
+    border-top: 180px solid transparent;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 3;
+}
+
+/* ใช้ pseudo-element เพื่อสลักลวดลายตารางลงบนตัวซอง */
+.pocket::after {
+    content: '';
+    position: absolute;
+    bottom: -180px;
+    left: -300px;
+    width: 600px;
+    height: 360px;
+    background-image: 
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.25) 0px, rgba(255,255,255,0.25) 15px, transparent 15px, transparent 30px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.25) 0px, rgba(255,255,255,0.25) 15px, transparent 15px, transparent 30px);
+    clip-path: polygon(0% 50%, 50% 100%, 100% 50%, 100% 100%, 0% 100%);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* ตราประทับรูปหัวใจตรงกลางซองเพิ่มความคิ้วท์ */
+.heart-seal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    font-size: 32px;
+    z-index: 4;
+    transition: opacity 0.3s ease, transform 0.4s ease;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+    cursor: pointer;
+}
+
+/* --- Letter Styles --- */
+.letter {
+    position: absolute;
+    top: 15px;
+    left: 25px;
+    right: 25px;
+    bottom: 15px;
+    
+    /* 🎨 เปลี่ยนพื้นหลังการ์ดเป็นสีครีมนมเนยละมุนตา */
+    background-color: #FFFDF4; 
+    border-radius: 12px;
+    padding: 20px; 
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* 🎀 เพิ่มเส้นประขอบการ์ดสีชมพูพาสเทล ให้ดูเหมือนการ์ดแฮนด์เมดน่ารักๆ */
+    border: 3px dashed #FFB5B5;
+    outline: 6px solid #FFFDF4; /* ช่วยคั่นระหว่างเส้นประกับขอบการ์ดให้ดูมีมิติ */
+}
+
+/* ระบบสลับหน้ากระดาษภายในซอง (ทั้งหน้า 1 และ หน้า 2) */
+.letter-page {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    animation: fadeIn 0.4s ease-in-out;
+    
+    /* 💡 แถมทริค: เติมลูกเล่นพื้นหลังลายเส้นบรรทัดจางๆ สไตล์สมุดโน้ตน่ารักๆ */
+    background-image: linear-gradient(rgba(92, 67, 34, 0.03) 1px, transparent 1px);
+    background-size: 100% 24px; /* ระยะห่างของเส้นบรรทัด */
+}
+
+.letter-page.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.bear-img {
+    width: 85px; 
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 12px;
+}
+
+.letter h2 {
+    font-size: 1.6rem; 
+    margin-bottom: 8px;
+    color: var(--btn-color);
+}
+
+.letter p {
+    font-size: 1.1rem; 
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+/* --- สไตล์หน้าสลีปเงินโอน --- */
+.slip-img {
+    width: 105px; /* ปรับลดจาก 135px เหลือ 105px เพื่อประหยัดพื้นที่แนวตั้ง */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 4px 0; /* ลดระยะห่างบน-ล่างของรูปภาพ */
+    transition: transform 0.2s ease;
+}
+
+.slip-img:hover {
+    transform: scale(1.03);
+}
+
+.slip-sub {
+    font-size: 0.85rem !important; /* ปรับขนาดฟอนต์คำอธิบายให้กระชับขึ้นเล็กน้อย */
+    color: #8c7355;
+    margin-bottom: 4px; /* ลดระยะห่างด้านล่าง */
+}
+
+/* 🐻 ปุ่มกดสลับหน้าภายในซอง (กดดูของขวัญสิ / ย้อนกลับ) 🐻 */
+.next-page-btn {
+    background-color: #FFF0F2; 
+    border: 2px solid var(--btn-color); 
+    color: #D66868; 
+    padding: 6px 18px; /* ปรับลด padding ลงเล็กน้อยให้ปุ่มดูสมส่วนไม่หนาเกินไป */
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.85rem; /* ปรับขนาดตัวอักษรลงเล็กน้อย */
+    font-weight: 500;
+    border-radius: 25px; 
+    cursor: pointer;
+    margin-top: 5px; /* ปรับลดระยะห่างด้านบนให้ขยับขึ้นไปในกรอบ */
+    position: relative;
+    
+    box-shadow: 0 4px 0px var(--btn-color); 
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* เอฟเฟกต์เมื่อเมาส์ชี้ (Hover) */
+.next-page-btn:hover {
+    background-color: var(--btn-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0px #E58282; 
+}
+
+/* เอฟเฟกต์เมื่อกดคลิกจิ้มลงไปจริง (Active) */
+.next-page-btn:active {
+    transform: translateY(4px); 
+    box-shadow: 0 0px 0px transparent; 
+}
+
+/* ปรับแต่งไอคอนด้านในปุ่มให้เว้นระยะสวยงามขึ้น */
+.next-page-btn emoji {
+    margin-right: 5px;
+}
+
+/* --- Animations (When Opened) --- */
+.envelope-wrapper.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+.envelope-wrapper.open .letter {
+    transform: translateY(-240px); 
+    z-index: 5;
+}
+
+.envelope-wrapper.open .heart-seal {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.5);
+    pointer-events: none;
+}
+
+.envelope-wrapper.open {
+    animation: none; 
+}
+
+/* --- Button Styles --- */
+.controls {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    background-color: var(--btn-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 155, 155, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 155, 155, 0.6);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.reset-btn {
+    background-color: var(--envelope-dark);
+    box-shadow: 0 4px 15px rgba(230, 185, 83, 0.4);
+}
+
+/* --- Image Modal (Lightboxสำหรับกดขยายรูปเต็มจอ) --- */
+.image-modal {
+    display: none; 
+    position: fixed;
+    z-index: 9999; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75); 
+    backdrop-filter: blur(8px); 
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.image-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 85vh; 
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-modal.show .modal-content {
+    transform: scale(1);
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+}
+
+.close-modal:hover {
+    color: var(--btn-color);
+}
+
+/* ==========================================================================
+   เพิ่มโค้ดชุดนี้ไว้ที่ท้ายสุดของไฟล์ style.css เพื่อรองรับหน้าจอโทรศัพท์มือถือ
+   ========================================================================== */
+
+@media only screen and (max-width: 650px) {
+    /* 1. ย่อขนาดพื้นที่รวมและระยะห่างรอบๆ ให้พอดีจอ */
+    .container {
+        gap: 25px;
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    /* 2. ย่อขนาดซองจดหมายให้เล็กลงพอดีกับจอมือถือ */
+    .envelope-wrapper {
+        width: 320px;   /* ย่อจาก 600px */
+        height: 192px;  /* ย่อจาก 360px (คงสัดส่วนเดิมไว้) */
+    }
+
+    /* 3. ปรับขนาดฝาซองและตัวซองให้รับกับขนาดใหม่ */
+    .flap {
+        border-top-width: 96px;   /* 192 / 2 */
+        border-left-width: 160px; /* 320 / 2 */
+        border-right-width: 160px;
+    }
+
+    .pocket {
+        border-bottom-width: 96px;
+        border-left-width: 160px;
+        border-right-width: 160px;
+        border-top-width: 96px;
+    }
+
+    /* ปรับลวดลายตารางให้เล็กลงตามซอง */
+    .pocket::after {
+        bottom: -96px;
+        left: -160px;
+        width: 320px;
+        height: 192px;
+        background-size: 20px 20px;
+    }
+
+    /* 4. จัดแต่งตำแหน่งการ์ดจดหมายด้านในเมื่อเด้งเปิดบนมือถือ */
+    .letter {
+        top: 8px;
+        left: 12px;
+        right: 12px;
+        bottom: 8px;
+        padding: 10px;
+        border-width: 2px; /* ลดความหนาเส้นประ */
+        outline-width: 3px;
+    }
+
+    /* ระยะดันการ์ดขึ้นตอนเปิดซอง (ย่อลงเพื่อให้ไม่หลุดขอบจอด้านบนบนมือถือ) */
+    .envelope-wrapper.open .letter {
+        transform: translateY(-130px); 
+    }
+
+    /* 5. ย่อขนาดตัวอักษรและรูปภาพข้างในการ์ดให้อ่านง่ายพอดีกรอบ */
+    .letter h2 {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .letter p {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+
+    /* รูปแฟน / รูปหมีเนย หน้า 1 */
+    .bear-img {
+        width: 55px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+    }
+
+    /* รูปสลีปเงินโอน หน้า 2 */
+    .slip-img {
+        width: 65px; /* ปรับขนาดสลีปให้พอดีกรอบกระดาษเล็กบนมือถือ */
+        margin: 2px 0;
+        border-radius: 4px;
+    }
+
+    .slip-sub {
+        font-size: 0.65rem !important;
+        margin-bottom: 2px;
+    }
+
+    /* 6. ปรับปุ่มภายในซอง (กดดูของขวัญ / ย้อนกลับ) ให้เล็กกะทัดรัด */
+    .next-page-btn {
+        padding: 4px 12px;
+        font-size: 0.7rem;
+        margin-top: 4px;
+        box-shadow: 0 2px 0px var(--btn-color);
+    }
+    
+    .next-page-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 0px #E58282;
+    }
+    
+    .next-page-btn:active {
+        transform: translateY(2px);
+    }
+
+    /* ตราหัวใจตรงกลางซอง */
+    .heart-seal {
+        font-size: 22px;
+    }
+
+    /* 7. ปรับปุ่มหลักด้านล่าง (เปิดซอง / ปิดซอง) */
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
